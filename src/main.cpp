@@ -69,7 +69,8 @@ namespace
                     it++;
                 }
             }
-            
+
+            rng.update();
             bn::core::update();
         }
     }
