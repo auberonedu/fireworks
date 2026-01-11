@@ -30,37 +30,46 @@
 
 namespace
 {
-    void palette_bitmap_bgs_scene()
+    const int MAX_FIREWORKS = 10;
+    const int MAX_FW_X = bn::display::width();
+    const int MAX_FW_Y = bn::display::height();
+
+    // TODO: Is there a way to get this dynamically from the palette item?
+    const int COLOR_COUNT = 8;
+
+    void fireworks_scene()
     {
         bn::palette_bitmap_bg_ptr bg = bn::palette_bitmap_bg_ptr::create(
                 bn::palette_bitmap_items::fw.palette_item());
 
         bn::palette_bitmap_bg_painter painter(bg);
         painter.clear();
-        painter.flip_page_later();
 
         auto rng = bn::random();
 
-        const int fireworkcount = 10;
-
-        bn::vector<Firework, fireworkcount> fireworks  = {};
+        bn::vector<Firework, MAX_FIREWORKS> fireworks  = {};
 
         while(true)
         {
-            if(bn::keypad::a_pressed() && fireworks.size() < fireworkcount) {
-                auto x = rng.get_fixed(0, 240);
-                auto y = rng.get_fixed(0, 160);
-                fireworks.push_back(Firework(x, y, rng.get_int(1, 8), &painter, rng));
+            // If aren't at capactiy for fireworks, create a new one when A is pressed
+            if(bn::keypad::a_pressed() && fireworks.size() < MAX_FIREWORKS) {
+                // Firework has random color from full palette, and random location from full screen
+                auto x = rng.get_fixed(0, MAX_FW_X);
+                auto y = rng.get_fixed(0, MAX_FW_Y);
+                fireworks.push_back(Firework(x, y, rng.get_int(1, COLOR_COUNT), &painter, rng));
             }
 
             for(auto it = fireworks.begin(); it != fireworks.end();) {
+                // Remove finished fireworks from vector so new ones can be made
                 if(it->finished()) {
                     it = fireworks.erase(it);
                 } else {
+                    // Update unfinished ones
                     it->draw_and_update();
                     it++;
                 }
             }
+            
             bn::core::update();
         }
     }
@@ -70,12 +79,6 @@ namespace
 int main()
 {
     bn::core::init();
-
     bn::bg_palettes::set_transparent_color(bn::color(0, 0, 0));
-
-    while(true)
-    {
-        palette_bitmap_bgs_scene();
-        bn::core::update();
-    }
+    fireworks_scene();
 }

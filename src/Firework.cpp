@@ -3,8 +3,12 @@
 Firework::Firework(bn::fixed x, bn::fixed y, int color_idx, bn::palette_bitmap_bg_painter *painter, bn::random &rng) :
 _painter(painter) {
     _dots = {};
-    for(int i = 0; i < dotcount; i++) {
-        _dots.push_back(Dot(x, y, rng.get_fixed(-1, 1), rng.get_fixed(-2, .5), 30, color_idx, .09));
+    for(int i = 0; i < DOTS_PER_FIREWORK; i++) {
+        _dots.push_back(Dot(x, y, 
+                            rng.get_fixed(-1, 1), rng.get_fixed(-2, .5), // random initial vector
+                            DOT_TTC,
+                            color_idx,
+                            GRAVITY));
     }
 }
 

@@ -17,7 +17,6 @@ Dot::Dot(bn::fixed x, bn::fixed y, bn::fixed dx, bn::fixed dy, int ttc, int colo
 
 void Dot::update() {
     if(!_finished) {
-        // TODO: air resistance
         _dy += _gravity;
         _x +=_dx;
         _y += _dy;

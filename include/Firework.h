@@ -6,7 +6,7 @@
 #include "bn_palette_bitmap_bg_painter.h"
 #include "Dot.h"
 
-const int dotcount = 20;
+
 
 class Firework {
     public:
@@ -21,7 +21,10 @@ class Firework {
         bool finished();
 
     private:
-        bn::vector<Dot, dotcount> _dots;
+        static inline constexpr int DOTS_PER_FIREWORK = 20;
+        static inline constexpr int DOT_TTC = 30;
+        static inline constexpr bn::fixed GRAVITY = bn::fixed(9) / 100;
+        bn::vector<Dot, DOTS_PER_FIREWORK> _dots;
         bn::palette_bitmap_bg_painter *_painter;
 };
 
